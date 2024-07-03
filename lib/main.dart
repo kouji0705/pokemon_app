@@ -24,7 +24,6 @@ class PokemonHomePage extends StatefulWidget {
 }
 
 class _PokemonHomePageState extends State<PokemonHomePage> {
-  final TextEditingController _controller = TextEditingController();
   final ApiService _apiService = ApiService();
   Map<String, dynamic>? _pokemonData;
   bool _isLoading = false;
@@ -57,28 +56,6 @@ class _PokemonHomePageState extends State<PokemonHomePage> {
     }
   }
 
-  void _fetchPokemon() async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-    try {
-      final data =
-          await _apiService.fetchPokemon(_controller.text.toLowerCase());
-      setState(() {
-        _pokemonData = data;
-      });
-    } catch (e) {
-      setState(() {
-        _error = e.toString();
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,19 +65,9 @@ class _PokemonHomePageState extends State<PokemonHomePage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                labelText: 'Enter Pokemon Name',
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _fetchPokemon,
-              child: Text('Fetch Pokemon'),
-            ),
-            SizedBox(height: 20),
             if (_isLoading) CircularProgressIndicator(),
             if (_error != null) Text('Error: $_error'),
             if (_pokemonData != null) ...[
