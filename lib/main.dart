@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_app/api_service.dart';
+
+import 'api_service.dart';
 
 void main() {
   runApp(PokemonApp());
@@ -62,27 +63,43 @@ class _PokemonHomePageState extends State<PokemonHomePage> {
       appBar: AppBar(
         title: Text('Pokemon App'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (_isLoading) CircularProgressIndicator(),
-            if (_error != null) Text('Error: $_error'),
-            if (_pokemonData != null) ...[
-              Text(
-                _pokemonData!['name'].toString().toUpperCase(),
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              if (_pokemonData!['sprites'] != null &&
-                  _pokemonData!['sprites']['front_default'] != null)
-                Image.network(_pokemonData!['sprites']['front_default']),
-              Text('Height: ${_pokemonData!['height']}'),
-              Text('Weight: ${_pokemonData!['weight']}'),
-            ],
-          ],
-        ),
+      body: Center(
+        child: _isLoading
+            ? CircularProgressIndicator()
+            : _error != null
+                ? Text('Error: $_error')
+                : _pokemonData != null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            _pokemonData!['name'].toString().toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          if (_pokemonData!['sprites'] != null &&
+                              _pokemonData!['sprites']['front_default'] != null)
+                            Image.network(
+                              _pokemonData!['sprites']['front_default'],
+                              height: 200,
+                              width: 200,
+                            ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Height: ${_pokemonData!['height']}',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                          Text(
+                            'Weight: ${_pokemonData!['weight']}',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ],
+                      )
+                    : Container(),
       ),
     );
   }
